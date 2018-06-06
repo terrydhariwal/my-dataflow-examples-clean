@@ -1,0 +1,5 @@
+.DS_Store
+.idea
+word-count-beam/nohup.out
+target/
+nohup.out
