@@ -149,21 +149,10 @@ public class KafkaAggregationToGCS {
                                         options.getOutputFilenamePrefix(),
                                         options.getOutputShardTemplate(),
                                         options.getOutputFilenameSuffix()))
-                        .withTempDirectory(ValueProvider.NestedValueProvider.of(
-                                options.getOutputDirectory(),
-                                (SerializableFunction<String, ResourceId>) input ->
-                                        FileBasedSink.convertToFileResourceIfPossible(input))));
+                        .withTempDirectory(FileBasedSink.convertToFileResourceIfPossible(options.getTempLocation()))
+        );
 
         p.run().waitUntilFinish();
     }
 
-    private static class SerializeKafkaRecord implements SerializableFunction<KafkaRecord<String, String>, String> {
-        @Override
-        public String apply(KafkaRecord<String, String> input) {
-            //LOG.info("============================= SerializeKafkaRecord = " + input.getKV().getKey().toString() + "\n" +
-            //        "============================= SerializeKafkaRecord = " + input.getKV().getValue().toString());
-            LOG.info("============================= SerializeUserWrite = " + input);
-            return input.getKV().getValue().toString();
-        }
-    }
 }
